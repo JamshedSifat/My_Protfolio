@@ -1,0 +1,44 @@
+name: TypeScript API
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: portfolio_test
+          POSTGRES_USER: portfolio
+          POSTGRES_PASSWORD: portfolio
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U portfolio -d portfolio_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://portfolio:portfolio@localhost:5432/portfolio_test
+      DATABASE_SSL: "false"
+      JWT_ACCESS_SECRET: ci-access-secret-that-is-longer-than-thirty-two-characters
+      JWT_REFRESH_SECRET: ci-refresh-secret-that-is-longer-than-thirty-two-characters
+      ALLOWED_ORIGINS: http://localhost:5173
+      ADMIN_EMAIL: admin@example.com
+      ADMIN_PASSWORD: ci-password-at-least-twelve
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx tsc -p backend/tsconfig.json --noEmit
+      - run: npx tsx backend/src/migrate.ts
+      - run: npx tsx backend/src/check.ts
+      - run: npm run build

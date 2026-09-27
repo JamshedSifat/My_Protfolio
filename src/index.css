@@ -1,0 +1,438 @@
+@import "tailwindcss";
+
+/* ── Dark mode driven by class (set pre-paint to avoid flash) ───────────── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Design tokens ─────────────────────────────────────────────────────── */
+@theme {
+  --font-sans: "SF Pro Display", "Geist", "Inter", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "SF Mono", "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-accent: #0a84ff;
+  --color-accent-soft: #3b99ff;
+  --color-accent-deep: #0060df;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --animate-breathe: breathe 9s ease-in-out infinite;
+  --animate-drift: drift 26s ease-in-out infinite;
+  --animate-shimmer: shimmer 2.4s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+}
+
+/* ── Light theme ───────────────────────────────────────────────────────── */
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --line: #e5e7eb;
+  --line-strong: #d3dae3;
+
+  --glass: rgba(255, 255, 255, 0.68);
+  --glass-border: rgba(15, 23, 42, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.85);
+  --shadow-tint: 15 23 42;
+
+  --elev-1: 0 1px 2px rgb(15 23 42 / 0.04), 0 2px 8px -2px rgb(15 23 42 / 0.06);
+  --elev-2: 0 2px 4px rgb(15 23 42 / 0.04), 0 12px 28px -12px rgb(15 23 42 / 0.14);
+  --elev-3: 0 4px 8px rgb(15 23 42 / 0.05), 0 28px 60px -22px rgb(15 23 42 / 0.22);
+  --elev-4: 0 8px 16px rgb(15 23 42 / 0.06), 0 48px 96px -32px rgb(15 23 42 / 0.3);
+
+  --grid-line: rgb(15 23 42 / 0.045);
+  color-scheme: light;
+}
+
+/* ── Dark theme ────────────────────────────────────────────────────────── */
+.dark {
+  --bg: #09090b;
+  --surface: #111827;
+  --surface-2: #161d2b;
+  --ink: #fafafa;
+  --muted: #94a3b8;
+  --line: #1f2937;
+  --line-strong: #2b3648;
+
+  --glass: rgba(17, 24, 39, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.14);
+  --shadow-tint: 0 0 0;
+
+  --elev-1: 0 1px 2px rgb(0 0 0 / 0.4), 0 2px 10px -4px rgb(0 0 0 / 0.5);
+  --elev-2: 0 2px 6px rgb(0 0 0 / 0.45), 0 14px 32px -14px rgb(0 0 0 / 0.7);
+  --elev-3: 0 4px 10px rgb(0 0 0 / 0.5), 0 30px 64px -24px rgb(0 0 0 / 0.8);
+  --elev-4: 0 8px 18px rgb(0 0 0 / 0.55), 0 50px 100px -34px rgb(0 0 0 / 0.9);
+
+  --grid-line: rgb(255 255 255 / 0.045);
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: auto; /* Lenis owns scrolling */
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-optical-sizing: auto;
+    font-synthesis-weight: none;
+    font-feature-settings: "cv02", "cv03", "cv04", "ss01";
+    letter-spacing: -0.011em;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: rgb(10 132 255 / 0.22);
+    color: var(--ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 999px;
+    border: 3px solid var(--bg);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--muted);
+  }
+
+  input,
+  textarea,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+}
+
+/* ── Components / utilities ────────────────────────────────────────────── */
+/* ── Liquid Glass (macOS) ───────────────────────────────────────────────────
+   Three tiers. `glass` is the existing base; `liquid` is the premium surface
+   used by cards that need edge highlights, layered depth and a light sweep. */
+@utility glass {
+  background: var(--glass);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--glass-border);
+}
+
+@utility liquid {
+  position: relative;
+  background: var(--glass);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--elev-2);
+}
+
+/* Soft edge highlight — the lit rim that sells the glass thickness. */
+@utility liquid-edge {
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    pointer-events: none;
+    background: linear-gradient(
+      145deg,
+      var(--glass-highlight) 0%,
+      transparent 32%,
+      transparent 62%,
+      var(--glass-highlight) 100%
+    );
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    opacity: 0.9;
+  }
+}
+
+/* Top sheen — a single bright line along the top edge. */
+@utility liquid-sheen {
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 12%;
+    top: 0;
+    height: 1px;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--glass-highlight) 45%,
+      var(--glass-highlight) 55%,
+      transparent 100%
+    );
+  }
+}
+
+/* Hover-only reflection sweep. Use with `overflow-hidden`. */
+@utility liquid-sweep {
+  & > .sweep {
+    position: absolute;
+    top: -60%;
+    left: -35%;
+    width: 45%;
+    height: 220%;
+    pointer-events: none;
+    transform: rotate(18deg) translateX(-120%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.14) 45%,
+      rgba(255, 255, 255, 0.22) 50%,
+      rgba(255, 255, 255, 0.14) 55%,
+      transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 0.45s ease;
+  }
+  &:hover > .sweep,
+  &:focus-within > .sweep {
+    opacity: 1;
+    animation: liquidSweep 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+@utility elevate-1 {
+  box-shadow: var(--elev-1);
+}
+@utility elevate-2 {
+  box-shadow: var(--elev-2);
+}
+@utility elevate-3 {
+  box-shadow: var(--elev-3);
+}
+@utility elevate-4 {
+  box-shadow: var(--elev-4);
+}
+
+@utility text-gradient {
+  background: linear-gradient(180deg, var(--ink) 0%, var(--ink) 40%, var(--muted) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Hairline that catches light on hover */
+@utility light-border {
+  position: relative;
+}
+
+@utility mask-fade-b {
+  mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Custom cursor: hide native pointer only on precise devices with JS active */
+@media (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+}
+
+/* ── Keyframes ─────────────────────────────────────────────────────────── */
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(4%, -3%, 0) scale(1.08);
+  }
+  66% {
+    transform: translate3d(-3%, 4%, 0) scale(0.96);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes liquidSweep {
+  0% {
+    transform: rotate(18deg) translateX(-140%);
+  }
+  100% {
+    transform: rotate(18deg) translateX(320%);
+  }
+}
+
+/* Terminal caret + prompt */
+@keyframes caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Case-study hero banner drift */
+@keyframes slowPan {
+  0% {
+    transform: scale(1.06) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.12) translate3d(-1.5%, -1%, 0);
+  }
+  100% {
+    transform: scale(1.06) translate3d(0, 0, 0);
+  }
+}
+
+.animate-slow-pan {
+  animation: slowPan 26s ease-in-out infinite;
+}
+.caret {
+  animation: caret 1.05s step-end infinite;
+}
+
+/* ── Theme cross-fade (fallback when View Transitions are unavailable) ─── */
+html.theme-anim body,
+html.theme-anim body * {
+  transition:
+    background-color 420ms var(--ease-out-expo),
+    border-color 420ms var(--ease-out-expo),
+    color 420ms var(--ease-out-expo),
+    box-shadow 420ms var(--ease-out-expo) !important;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+/* ── Lenis ─────────────────────────────────────────────────────────────── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ── Contribution heatmap cells ────────────────────────────────────────── */
+.heat-cell {
+  animation: cellIn 0.55s var(--ease-out-expo) both;
+}
+@keyframes cellIn {
+  from {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── Reduced motion ────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: auto !important;
+  }
+}

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#09090B" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)" />
+
+    <title>Sifat — Full Stack Developer</title>
+    <meta
+      name="description"
+      content="Sifat is a Full Stack Developer building production-ready web applications with modern frontends, scalable Django backends and AI-powered solutions. Open to internships."
+    />
+    <meta name="author" content="Sifat" />
+    <meta name="keywords" content="Full Stack Developer, React Developer, Django, PostgreSQL, AI Integration, Portfolio" />
+    <link rel="canonical" href="https://sifat.dev/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Sifat — Full Stack Developer" />
+    <meta property="og:title" content="Sifat — Full Stack Developer" />
+    <meta
+      property="og:description"
+      content="Building production-ready web applications with modern frontend, scalable backend and AI-powered solutions."
+    />
+    <meta property="og:url" content="https://sifat.dev/" />
+    <meta property="og:image" content="https://sifat.dev/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sifat — Full Stack Developer" />
+    <meta
+      name="twitter:description"
+      content="Building production-ready web applications with modern frontend, scalable backend and AI-powered solutions."
+    />
+    <meta name="twitter:image" content="https://sifat.dev/og-image.png" />
+
+    <!-- Icons / PWA -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap" />
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Sifat",
+        "jobTitle": "Full Stack Developer",
+        "url": "https://sifat.dev/",
+        "image": "https://sifat.dev/og-image.png",
+        "description": "Full Stack Developer building production-ready web applications with React, Django, PostgreSQL and AI integrations.",
+        "knowsAbout": ["React", "JavaScript", "Django", "Django REST Framework", "PostgreSQL", "MongoDB", "Docker", "AI Integration"],
+        "sameAs": ["https://github.com/sifat", "https://www.linkedin.com/in/sifat"]
+      }
+    </script>
+
+    <!-- Prevent theme flash: runs before first paint -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          var system = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          var cached = JSON.parse(localStorage.getItem("sp.v1.content") || "null");
+          var preferred = cached && cached.settings && cached.settings.defaultTheme;
+          var fallback = preferred === "light" || preferred === "dark" ? preferred : system;
+          var theme = stored === "light" || stored === "dark" ? stored : fallback;
+          document.documentElement.classList.toggle("dark", theme === "dark");
+          document.documentElement.style.colorScheme = theme;
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
